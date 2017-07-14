@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Remove all the other commands with the same tag.
  */
-class ClearByTag implements Strategy {
+public class ClearByTag implements Strategy {
 
   @Override
   public <T> void handle(List<ViewCommand<T>> commands, ViewCommand<T> command) {
