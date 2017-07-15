@@ -59,6 +59,13 @@ public abstract class ViewState<T> {
   }
 
   /**
+   * Returns the attached view.
+   */
+  public final T getView() {
+    return view;
+  }
+
+  /**
    * Returns {@code true} if the ViewState is under restoring.
    */
   public final boolean isRestoring() {

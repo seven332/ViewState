@@ -22,7 +22,6 @@ package com.hippo.viewstate.compiler;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
 public class ViewStateBuilder {
@@ -78,14 +77,10 @@ public class ViewStateBuilder {
   }
 
   public static ViewStateBuilder build(TypeElement element) {
-    // Must be interface
-    if (element.getKind() != ElementKind.INTERFACE) {
-      throw new RuntimeException("Only methods of interface can be set StrategyType, but " + element.getQualifiedName() + " is not a interface.");
-    }
-
+    // Check naked interface
     String name = element.getQualifiedName().toString();
-    if (!name.contains("a")) {
-      throw new RuntimeException("No support for naked interface");
+    if (!name.contains(".")) {
+      throw new ViewStateException("No support for naked interface");
     }
 
     return new ViewStateBuilder(name);

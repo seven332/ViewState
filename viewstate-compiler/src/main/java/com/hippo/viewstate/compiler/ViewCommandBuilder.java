@@ -42,6 +42,8 @@ public class ViewCommandBuilder {
   }
 
   public void append(StringBuilder sb, String viewName, ViewCommandSet commandSet, StrategySet strategies) {
+    boolean hasStrategy = tag != null && strategy != null;
+
     String commandName = commandSet.requireCommandName(name);
 
     // Method header
@@ -57,82 +59,92 @@ public class ViewCommandBuilder {
     sb.append(") {").append("\n");
 
     // Method body
-    sb.append("    execute(new ").append(commandName).append("(");
-    i = 0;
-    for (Parameter parameter : parameters) {
-      if (i++ != 0) {
-        sb.append(", ");
+    if (hasStrategy) {
+      sb.append("    execute(new ").append(commandName).append("(");
+      i = 0;
+      for (Parameter parameter : parameters) {
+        if (i++ != 0) {
+          sb.append(", ");
+        }
+        sb.append(parameter.name);
       }
-      sb.append(parameter.name);
+      sb.append("));").append("\n");
+    } else {
+      sb.append("    if (getView() != null) {").append("\n");
+      sb.append("      getView().").append(name).append("(");
+      i = 0;
+      for (Parameter parameter : parameters) {
+        if (i++ != 0) {
+          sb.append(", ");
+        }
+        sb.append(parameter.name);
+      }
+      sb.append(");").append("\n");
+      sb.append("    }").append("\n");
     }
-    sb.append("));").append("\n");
 
     // Method footer
     sb.append("  }").append("\n");
     sb.append("\n");
 
 
-    // Command class header
-    sb.append("  private static class ").append(commandName)
-        .append(" extends com.hippo.viewstate.ViewCommand<").append(viewName).append("> {")
-        .append("\n");
-    sb.append("\n");
+    if (hasStrategy) {
+      // Command class header
+      sb.append("  private static class ").append(commandName)
+          .append(" extends com.hippo.viewstate.ViewCommand<").append(viewName).append("> {")
+          .append("\n");
+      sb.append("\n");
 
-    // Command fields
-    if (!parameters.isEmpty()) {
-      for (Parameter parameter : parameters) {
-        sb.append("    private final ").append(parameter.type).append(" ").append(parameter.name).append(";").append("\n");
+      // Command fields
+      if (!parameters.isEmpty()) {
+        for (Parameter parameter : parameters) {
+          sb.append("    private final ").append(parameter.type).append(" ").append(parameter.name).append(";").append("\n");
+        }
+        sb.append("\n");
       }
+
+      // Command construction header
+      sb.append("    public ").append(commandName).append("(");
+      i = 0;
+      for (Parameter parameter : parameters) {
+        if (i++ != 0) {
+          sb.append(", ");
+        }
+        sb.append(parameter.type).append(" ").append(parameter.name);
+      }
+      sb.append(") {").append("\n");
+
+      // Command construction body
+      sb.append("      super(\"").append(tag).append("\", ").append(strategies.requireStrategy(strategy)).append(");").append("\n");
+      for (Parameter parameter : parameters) {
+        sb.append("      this.").append(parameter.name).append(" = ").append(parameter.name).append(";").append("\n");
+      }
+
+      // Command construction footer
+      sb.append("    }").append("\n");
+      sb.append("\n");
+
+      // Command method
+      sb.append("    @Override").append("\n");
+      sb.append("    public void execute(").append(viewName).append(" view) {").append("\n");
+      sb.append("      view.").append(name).append("(");
+      i = 0;
+      for (Parameter parameter : parameters) {
+        if (i++ != 0) {
+          sb.append(", ");
+        }
+        sb.append(parameter.name);
+      }
+      sb.append(");").append("\n");
+      sb.append("    }").append("\n");
+
+      // Command class footer
+      sb.append("  }").append("\n");
       sb.append("\n");
     }
-
-    // Command construction header
-    sb.append("    public ").append(commandName).append("(");
-    i = 0;
-    for (Parameter parameter : parameters) {
-      if (i++ != 0) {
-        sb.append(", ");
-      }
-      sb.append(parameter.type).append(" ").append(parameter.name);
-    }
-    sb.append(") {").append("\n");
-
-    // Command construction body
-    sb.append("      super(\"").append(tag).append("\", ").append(strategies.requireStrategy(strategy)).append(");").append("\n");
-    for (Parameter parameter : parameters) {
-      sb.append("      this.").append(parameter.name).append(" = ").append(parameter.name).append(";").append("\n");
-    }
-
-    // Command construction footer
-    sb.append("    }").append("\n");
-    sb.append("\n");
-
-    // Command method
-    sb.append("    @Override").append("\n");
-    sb.append("    public void execute(").append(viewName).append(" view) {").append("\n");
-    sb.append("      view.").append(name).append("(");
-    i = 0;
-    for (Parameter parameter : parameters) {
-      if (i++ != 0) {
-        sb.append(", ");
-      }
-      sb.append(parameter.name);
-    }
-    sb.append(");").append("\n");
-    sb.append("    }").append("\n");
-
-    // Command class footer
-    sb.append("  }").append("\n");
-    sb.append("\n");
   }
 
   public static ViewCommandBuilder build(ExecutableElement element) {
-    // Check return type, must be void
-    String returnType = element.getReturnType().toString();
-    if (!"void".equals(returnType)) {
-      throw new RuntimeException("Return type of view method must be void, but it's " + returnType);
-    }
-
     String name = element.getSimpleName().toString();
 
     List<Parameter> parameters = new ArrayList<>();
@@ -143,14 +155,20 @@ public class ViewCommandBuilder {
       parameters.add(parameter);
     }
 
-    StrategyType strategyType = element.getAnnotation(StrategyType.class);
-    String tag = strategyType.tag();
+    String tag;
     String strategy;
-    try {
-      strategyType.value();
-      throw new RuntimeException("Can't get value of StrategyType");
-    } catch (MirroredTypeException e) {
-      strategy = e.getTypeMirror().toString();
+    StrategyType strategyType = element.getAnnotation(StrategyType.class);
+    if (strategyType != null) {
+      tag = strategyType.tag();
+      try {
+        strategyType.value();
+        throw new ViewStateException("Can't get value of StrategyType");
+      } catch (MirroredTypeException e) {
+        strategy = e.getTypeMirror().toString();
+      }
+    } else {
+      tag = null;
+      strategy = null;
     }
 
     return new ViewCommandBuilder(name, parameters, tag, strategy);

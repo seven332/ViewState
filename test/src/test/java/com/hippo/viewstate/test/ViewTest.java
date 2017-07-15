@@ -82,5 +82,14 @@ public class ViewTest {
     public void test(String arg1, int arg2, float... arg3) {
       test3++;
     }
+
+    @Override
+    public void skip() {}
+
+    @Override
+    public void skip(String arg1) {}
+
+    @Override
+    public void skip(String arg1, int arg2) {}
   }
 }

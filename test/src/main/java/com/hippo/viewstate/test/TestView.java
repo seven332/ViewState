@@ -20,9 +20,11 @@ package com.hippo.viewstate.test;
  * Created by Hippo on 2017/7/13.
  */
 
+import com.hippo.viewstate.GenerateViewState;
 import com.hippo.viewstate.strategy.SingleByTag;
 import com.hippo.viewstate.strategy.StrategyType;
 
+@GenerateViewState
 public interface TestView {
 
   String TAG_TEST = "test";
@@ -38,4 +40,10 @@ public interface TestView {
 
   @StrategyType(value = SingleByTag.class, tag = TAG_TEST)
   void test(String arg1, int arg2, float... arg3);
+
+  void skip();
+
+  void skip(String arg1);
+
+  void skip(String arg1, int arg2);
 }

@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.hippo.viewstate.strategy;
+package com.hippo.viewstate;
+
 /*
- * Created by Hippo on 2017/7/13.
+ * Created by Hippo on 2017/7/15.
  */
 
-import com.hippo.viewstate.ViewCommand;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * Don't save the command.
- *
- * @deprecated Just don't add {@link StrategyType}.
- */
-@Deprecated()
-public class Skip implements Strategy {
-
-  @Override
-  public <T> void handle(List<ViewCommand<T>> commands, ViewCommand<T> command) {}
-}
+@Target(value = ElementType.TYPE)
+@Retention(value = RetentionPolicy.SOURCE)
+public @interface GenerateViewState {}

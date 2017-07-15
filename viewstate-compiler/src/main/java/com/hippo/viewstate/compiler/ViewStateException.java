@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package com.hippo.viewstate.strategy;
+package com.hippo.viewstate.compiler;
+
 /*
- * Created by Hippo on 2017/7/13.
+ * Created by Hippo on 2017/7/15.
  */
 
-import com.hippo.viewstate.ViewCommand;
-import java.util.List;
+class ViewStateException extends RuntimeException {
 
-/**
- * Don't save the command.
- *
- * @deprecated Just don't add {@link StrategyType}.
- */
-@Deprecated()
-public class Skip implements Strategy {
+  public ViewStateException(String message) {
+    super(message);
+  }
 
-  @Override
-  public <T> void handle(List<ViewCommand<T>> commands, ViewCommand<T> command) {}
+  public ViewStateException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }
