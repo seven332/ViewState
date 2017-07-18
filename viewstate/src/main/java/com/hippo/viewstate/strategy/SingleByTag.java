@@ -30,7 +30,7 @@ import java.util.List;
 public class SingleByTag implements Strategy {
 
   @Override
-  public <T> void handle(List<ViewCommand<T>> commands, ViewCommand<T> command) {
+  public <T> void onAppend(List<ViewCommand<T>> commands, ViewCommand<T> command) {
     // Remove all commands with the same tag
     String tag = command.getTag();
     Iterator<ViewCommand<T>> iterator = commands.iterator();
@@ -43,4 +43,7 @@ public class SingleByTag implements Strategy {
     // Append the command
     commands.add(command);
   }
+
+  @Override
+  public <T> void onExecute(List<ViewCommand<T>> viewCommands, ViewCommand<T> command) {}
 }

@@ -30,7 +30,7 @@ import java.util.List;
 public class SingleByMethod implements Strategy {
 
   @Override
-  public <T> void handle(List<ViewCommand<T>> commands, ViewCommand<T> command) {
+  public <T> void onAppend(List<ViewCommand<T>> commands, ViewCommand<T> command) {
     // Remove all same commands
     Class<?> method = command.getClass();
     Iterator<ViewCommand<T>> iterator = commands.iterator();
@@ -43,4 +43,7 @@ public class SingleByMethod implements Strategy {
     // Append the command
     commands.add(command);
   }
+
+  @Override
+  public <T> void onExecute(List<ViewCommand<T>> viewCommands, ViewCommand<T> command) {}
 }

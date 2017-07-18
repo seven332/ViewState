@@ -15,6 +15,7 @@
  */
 
 package com.hippo.viewstate.strategy;
+
 /*
  * Created by Hippo on 2017/7/13.
  */
@@ -31,5 +32,8 @@ import java.util.List;
 public class Skip implements Strategy {
 
   @Override
-  public <T> void handle(List<ViewCommand<T>> commands, ViewCommand<T> command) {}
+  public <T> void onAppend(List<ViewCommand<T>> commands, ViewCommand<T> command) {}
+
+  @Override
+  public <T> void onExecute(List<ViewCommand<T>> viewCommands, ViewCommand<T> command) {}
 }

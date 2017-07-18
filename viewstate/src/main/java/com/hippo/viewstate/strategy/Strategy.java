@@ -28,5 +28,13 @@ import java.util.List;
  */
 public interface Strategy {
 
-  <T> void handle(List<ViewCommand<T>> commands, ViewCommand<T> command);
+  /**
+   * Called when the view command is added to a view state.
+   */
+  <T> void onAppend(List<ViewCommand<T>> commands, ViewCommand<T> command);
+
+  /**
+   * Called when the view command executes on a actual view.
+   */
+  <T> void onExecute(List<ViewCommand<T>> commands, ViewCommand<T> command);
 }

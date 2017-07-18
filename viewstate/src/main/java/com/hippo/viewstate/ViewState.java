@@ -20,6 +20,7 @@ package com.hippo.viewstate;
  * Created by Hippo on 2017/7/13.
  */
 
+import com.hippo.viewstate.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,8 @@ public abstract class ViewState<T> {
     this.view = view;
 
     isRestoring = true;
-    for (ViewCommand<T> command : commands) {
+    for (ViewCommand<T> command : new ArrayList<>(commands)) {
+      command.getStrategy().onExecute(commands, command);
       command.execute(view);
     }
     isRestoring = false;
@@ -73,9 +75,11 @@ public abstract class ViewState<T> {
   }
 
   protected final void execute(ViewCommand<T> command) {
-    command.getStrategy().handle(commands, command);
+    Strategy strategy = command.getStrategy();
+    strategy.onAppend(commands, command);
 
     if (view != null) {
+      strategy.onExecute(commands, command);
       command.execute(view);
     }
   }
