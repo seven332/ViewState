@@ -19,13 +19,8 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
-repositories {
-    jcenter()
-}
-
 dependencies {
-    compile project(':viewstate')
-    compile 'com.squareup:javapoet:1.9.0'
+    implementation project(':viewstate')
 }
 
 apply from: rootProject.file('maven-gradle.gradle')
