@@ -22,20 +22,48 @@ package com.hippo.viewstate.compiler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
 public class ViewStateBuilder {
 
   public final String name;
+  public final String intfName;
   public final List<ViewCommandBuilder> commands;
 
-  public ViewStateBuilder(String name) {
+  public ViewStateBuilder(String name, String intfName) {
     this.name = name;
+    this.intfName = intfName;
     this.commands = new ArrayList<>();
   }
 
   public void addCommand(ViewCommandBuilder command) {
     commands.add(command);
+  }
+
+  public void setUpInterface(Set<ViewStateBuilder> viewStateSet) {
+    if (intfName == null) return;
+
+    ViewStateBuilder intf = null;
+    for (ViewStateBuilder viewState : viewStateSet) {
+      if (viewState.name.equals(intfName)) {
+        intf = viewState;
+        break;
+      }
+    }
+
+    if (intf == null) {
+      throw new ViewStateException(intfName + " must be decorated by GenerateViewState");
+    }
+
+    for (ViewCommandBuilder command1 : commands) {
+      for (ViewCommandBuilder command2 : intf.commands) {
+        if (command1.isTheSame(command2)) {
+          throw new ViewStateException("Same method in sub-interface is not allowed");
+        }
+      }
+    }
   }
 
   public String filename() {
@@ -52,8 +80,11 @@ public class ViewStateBuilder {
 
     // Class
     String className = substringAfterLast(name, '.') + "State";
-    sb.append("public final class ").append(className)
-        .append(" extends com.hippo.viewstate.ViewState<").append(name)
+    String superClassName = intfName == null
+        ? "com.hippo.viewstate.ViewState"
+        : intfName + "State";
+    sb.append("public class ").append(className).append("<T extends ").append(name).append(">")
+        .append(" extends ").append(superClassName).append("<").append("T")
         .append("> implements ").append(name).append(" {").append("\n");
     sb.append("\n");
 
@@ -83,6 +114,16 @@ public class ViewStateBuilder {
       throw new ViewStateException("No support for naked interface");
     }
 
-    return new ViewStateBuilder(name);
+    String intfName;
+    List<? extends TypeMirror> interfaces = element.getInterfaces();
+    if (interfaces.size() == 0) {
+      intfName = null;
+    } else if (interfaces.size() == 1) {
+      intfName = interfaces.get(0).toString();
+    } else {
+      throw new ViewStateException("No support for multi-interface");
+    }
+
+    return new ViewStateBuilder(name, intfName);
   }
 }

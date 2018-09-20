@@ -24,7 +24,7 @@ public class ViewTest {
 
   @Test
   public void testSingleByTag1() {
-    TestViewState state = new TestViewState();
+    TestViewState<TestView> state = new TestViewState<>();
 
     state.singleByTag1();
     state.singleByTag1("1");
@@ -58,7 +58,7 @@ public class ViewTest {
 
   @Test
   public void testSingleByTag2() {
-    TestViewState state = new TestViewState();
+    TestViewState<TestView> state = new TestViewState<>();
 
     state.singleByTag1();
     state.singleByTag2();
@@ -77,7 +77,7 @@ public class ViewTest {
 
   @Test
   public void testSkip() {
-    TestViewState state = new TestViewState();
+    TestViewState<TestView> state = new TestViewState<>();
 
     state.skip();
     state.skip("1");
@@ -89,7 +89,7 @@ public class ViewTest {
     assertEquals(0, view1.skip2);
   }
 
-  public static final class TestViewImpl implements TestView {
+  public static class TestViewImpl implements TestView {
 
     public int singleByTag10 = 0;
     public int singleByTag11 = 0;

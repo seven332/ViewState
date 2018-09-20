@@ -104,6 +104,10 @@ public class ViewStateProcessor extends AbstractProcessor {
       }
     }
 
+    for (ViewStateBuilder viewState : viewStateSet) {
+      viewState.setUpInterface(viewStateSet);
+    }
+
     return viewStateSet;
   }
 

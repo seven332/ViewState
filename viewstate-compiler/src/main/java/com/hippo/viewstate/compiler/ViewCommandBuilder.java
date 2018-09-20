@@ -41,6 +41,24 @@ public class ViewCommandBuilder {
     this.strategy = strategy;
   }
 
+  public boolean isTheSame(ViewCommandBuilder command) {
+    if (!name.equals(command.name)) {
+      return false;
+    }
+
+    if (parameters.size() != command.parameters.size()) {
+      return false;
+    }
+
+    for (int i = 0; i < parameters.size(); i++) {
+      if (!parameters.get(i).type.equals(command.parameters.get(i).type)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   public void append(StringBuilder sb, String viewName, ViewCommandSet commandSet, StrategySet strategies) {
     boolean hasStrategy = tag != null && strategy != null;
 
@@ -60,7 +78,7 @@ public class ViewCommandBuilder {
 
     // Method body
     if (hasStrategy) {
-      sb.append("    execute(new ").append(commandName).append("(");
+      sb.append("    execute(new ").append(commandName).append("<>(");
       i = 0;
       for (Parameter parameter : parameters) {
         if (i++ != 0) {
@@ -90,8 +108,8 @@ public class ViewCommandBuilder {
 
     if (hasStrategy) {
       // Command class header
-      sb.append("  private static class ").append(commandName)
-          .append(" extends com.hippo.viewstate.ViewCommand<").append(viewName).append("> {")
+      sb.append("  private static class ").append(commandName).append("<T extends ").append(viewName)
+          .append("> extends com.hippo.viewstate.ViewCommand<T> {")
           .append("\n");
       sb.append("\n");
 
