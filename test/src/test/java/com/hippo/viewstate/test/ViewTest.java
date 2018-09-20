@@ -76,6 +76,22 @@ public class ViewTest {
   }
 
   @Test
+  public void testClearByTag() {
+    TestViewState<TestView> state = new TestViewState<>();
+
+    state.singleByTag1();
+    state.singleByTag1("1");
+    state.clearByTag1();
+
+    TestViewImpl view1 = new TestViewImpl();
+    state.attach(view1);
+    assertEquals(0, view1.singleByTag10);
+    assertEquals(0, view1.singleByTag11);
+    assertEquals(0, view1.singleByTag12);
+    assertEquals(0, view1.clearByTag1);
+  }
+
+  @Test
   public void testSkip() {
     TestViewState<TestView> state = new TestViewState<>();
 
@@ -95,6 +111,8 @@ public class ViewTest {
     public int singleByTag11 = 0;
     public int singleByTag12 = 0;
     public int singleByTag13 = 0;
+
+    public int clearByTag1 = 0;
 
     public int singleByTag20 = 0;
 
@@ -120,6 +138,11 @@ public class ViewTest {
     @Override
     public void singleByTag1(String arg1, int arg2, float... arg3) {
       singleByTag13++;
+    }
+
+    @Override
+    public void clearByTag1() {
+      clearByTag1++;
     }
 
     @Override
