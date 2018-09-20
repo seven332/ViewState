@@ -28,6 +28,7 @@ import com.hippo.viewstate.strategy.StrategyType;
 public interface TestView {
 
   String TAG_SINGLE_BY_TAG_1 = "SINGLE_BY_TAG_1";
+  String TAG_SINGLE_BY_TAG_2 = "SINGLE_BY_TAG_2";
 
   @StrategyType(value = SingleByTag.class, tag = TAG_SINGLE_BY_TAG_1)
   void singleByTag1();
@@ -40,6 +41,9 @@ public interface TestView {
 
   @StrategyType(value = SingleByTag.class, tag = TAG_SINGLE_BY_TAG_1)
   void singleByTag1(String arg1, int arg2, float... arg3);
+
+  @StrategyType(value = SingleByTag.class, tag = TAG_SINGLE_BY_TAG_2)
+  void singleByTag2();
 
   void skip();
 

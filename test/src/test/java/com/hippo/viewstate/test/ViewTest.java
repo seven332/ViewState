@@ -23,7 +23,7 @@ import org.junit.Test;
 public class ViewTest {
 
   @Test
-  public void testAttachAndDetach() {
+  public void testSingleByTag1() {
     TestViewState state = new TestViewState();
 
     state.singleByTag1();
@@ -56,12 +56,33 @@ public class ViewTest {
     assertEquals(0, view3.singleByTag12);
   }
 
+  @Test
+  public void testSingleByTag2() {
+    TestViewState state = new TestViewState();
+
+    state.singleByTag1();
+    state.singleByTag2();
+
+    TestViewImpl view1 = new TestViewImpl();
+    state.attach(view1);
+    assertEquals(1, view1.singleByTag10);
+    assertEquals(0, view1.singleByTag11);
+    assertEquals(0, view1.singleByTag12);
+
+    state.singleByTag2();
+    assertEquals(1, view1.singleByTag10);
+    assertEquals(0, view1.singleByTag11);
+    assertEquals(0, view1.singleByTag12);
+  }
+
   public static final class TestViewImpl implements TestView {
 
     public int singleByTag10 = 0;
     public int singleByTag11 = 0;
     public int singleByTag12 = 0;
     public int singleByTag13 = 0;
+
+    public int singleByTag20 = 0;
 
     @Override
     public void singleByTag1() {
@@ -81,6 +102,11 @@ public class ViewTest {
     @Override
     public void singleByTag1(String arg1, int arg2, float... arg3) {
       singleByTag13++;
+    }
+
+    @Override
+    public void singleByTag2() {
+      singleByTag20++;
     }
 
     @Override
