@@ -75,6 +75,20 @@ public class ViewTest {
     assertEquals(0, view1.singleByTag12);
   }
 
+  @Test
+  public void testSkip() {
+    TestViewState state = new TestViewState();
+
+    state.skip();
+    state.skip("1");
+
+    TestViewImpl view1 = new TestViewImpl();
+    state.attach(view1);
+    assertEquals(0, view1.skip0);
+    assertEquals(0, view1.skip1);
+    assertEquals(0, view1.skip2);
+  }
+
   public static final class TestViewImpl implements TestView {
 
     public int singleByTag10 = 0;
@@ -83,6 +97,10 @@ public class ViewTest {
     public int singleByTag13 = 0;
 
     public int singleByTag20 = 0;
+
+    public int skip0 = 0;
+    public int skip1 = 0;
+    public int skip2 = 0;
 
     @Override
     public void singleByTag1() {
@@ -110,12 +128,18 @@ public class ViewTest {
     }
 
     @Override
-    public void skip() {}
+    public void skip() {
+      skip0++;
+    }
 
     @Override
-    public void skip(String arg1) {}
+    public void skip(String arg1) {
+      skip1++;
+    }
 
     @Override
-    public void skip(String arg1, int arg2) {}
+    public void skip(String arg1, int arg2) {
+      skip2++;
+    }
   }
 }
