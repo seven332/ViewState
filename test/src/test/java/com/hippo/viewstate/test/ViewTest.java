@@ -26,61 +26,61 @@ public class ViewTest {
   public void testAttachAndDetach() {
     TestViewState state = new TestViewState();
 
-    state.test();
-    state.test("1");
+    state.singleByTag1();
+    state.singleByTag1("1");
 
     TestViewImpl view1 = new TestViewImpl();
     state.attach(view1);
-    assertEquals(0, view1.test0);
-    assertEquals(1, view1.test1);
-    assertEquals(0, view1.test2);
+    assertEquals(0, view1.singleByTag10);
+    assertEquals(1, view1.singleByTag11);
+    assertEquals(0, view1.singleByTag12);
 
-    state.test("2", 2);
-    assertEquals(0, view1.test0);
-    assertEquals(1, view1.test1);
-    assertEquals(1, view1.test2);
+    state.singleByTag1("2", 2);
+    assertEquals(0, view1.singleByTag10);
+    assertEquals(1, view1.singleByTag11);
+    assertEquals(1, view1.singleByTag12);
 
     state.detach();
     TestViewImpl view2 = new TestViewImpl();
     state.attach(view2);
-    assertEquals(0, view2.test0);
-    assertEquals(0, view2.test1);
-    assertEquals(1, view2.test2);
+    assertEquals(0, view2.singleByTag10);
+    assertEquals(0, view2.singleByTag11);
+    assertEquals(1, view2.singleByTag12);
 
     state.detach();
-    state.test();
+    state.singleByTag1();
     TestViewImpl view3 = new TestViewImpl();
     state.attach(view3);
-    assertEquals(1, view3.test0);
-    assertEquals(0, view3.test1);
-    assertEquals(0, view3.test2);
+    assertEquals(1, view3.singleByTag10);
+    assertEquals(0, view3.singleByTag11);
+    assertEquals(0, view3.singleByTag12);
   }
 
   public static final class TestViewImpl implements TestView {
 
-    public int test0 = 0;
-    public int test1 = 0;
-    public int test2 = 0;
-    public int test3 = 0;
+    public int singleByTag10 = 0;
+    public int singleByTag11 = 0;
+    public int singleByTag12 = 0;
+    public int singleByTag13 = 0;
 
     @Override
-    public void test() {
-      test0++;
+    public void singleByTag1() {
+      singleByTag10++;
     }
 
     @Override
-    public void test(String arg1) {
-      test1++;
+    public void singleByTag1(String arg1) {
+      singleByTag11++;
     }
 
     @Override
-    public void test(String arg1, int arg2) {
-      test2++;
+    public void singleByTag1(String arg1, int arg2) {
+      singleByTag12++;
     }
 
     @Override
-    public void test(String arg1, int arg2, float... arg3) {
-      test3++;
+    public void singleByTag1(String arg1, int arg2, float... arg3) {
+      singleByTag13++;
     }
 
     @Override

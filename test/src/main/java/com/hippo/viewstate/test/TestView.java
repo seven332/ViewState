@@ -27,19 +27,19 @@ import com.hippo.viewstate.strategy.StrategyType;
 @GenerateViewState
 public interface TestView {
 
-  String TAG_TEST = "test";
+  String TAG_SINGLE_BY_TAG_1 = "SINGLE_BY_TAG_1";
 
-  @StrategyType(value = SingleByTag.class, tag = TAG_TEST)
-  void test();
+  @StrategyType(value = SingleByTag.class, tag = TAG_SINGLE_BY_TAG_1)
+  void singleByTag1();
 
-  @StrategyType(value = SingleByTag.class, tag = TAG_TEST)
-  void test(String arg1);
+  @StrategyType(value = SingleByTag.class, tag = TAG_SINGLE_BY_TAG_1)
+  void singleByTag1(String arg1);
 
-  @StrategyType(value = SingleByTag.class, tag = TAG_TEST)
-  void test(String arg1, int arg2);
+  @StrategyType(value = SingleByTag.class, tag = TAG_SINGLE_BY_TAG_1)
+  void singleByTag1(String arg1, int arg2);
 
-  @StrategyType(value = SingleByTag.class, tag = TAG_TEST)
-  void test(String arg1, int arg2, float... arg3);
+  @StrategyType(value = SingleByTag.class, tag = TAG_SINGLE_BY_TAG_1)
+  void singleByTag1(String arg1, int arg2, float... arg3);
 
   void skip();
 
