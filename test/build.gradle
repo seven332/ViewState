@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-plugins {
-    id "net.ltgt.apt" version "0.10"
-}
-
 apply plugin: 'java'
 
-sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets {
     main {
-        java.srcDirs += file("${buildDir}/generated/source/apt/$name")
+        java.srcDirs += file("${buildDir}/classes/java/$name")
     }
 }
 
@@ -34,8 +30,8 @@ repositories {
 }
 
 dependencies {
-    compile project(':viewstate')
-    apt project(':viewstate-compiler')
+    implementation project(':viewstate')
+    annotationProcessor project(':viewstate-compiler')
 
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
