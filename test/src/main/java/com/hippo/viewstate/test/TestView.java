@@ -22,6 +22,7 @@ package com.hippo.viewstate.test;
 
 import com.hippo.viewstate.GenerateViewState;
 import com.hippo.viewstate.strategy.ClearByTag;
+import com.hippo.viewstate.strategy.SingleByMethod;
 import com.hippo.viewstate.strategy.SingleByTag;
 import com.hippo.viewstate.strategy.StrategyType;
 
@@ -48,6 +49,9 @@ public interface TestView {
 
   @StrategyType(value = SingleByTag.class, tag = TAG_SINGLE_BY_TAG_2)
   void singleByTag2();
+
+  @StrategyType(value = SingleByMethod.class)
+  void singleByMethod();
 
   void skip();
 

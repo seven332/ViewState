@@ -76,7 +76,7 @@ public class ViewTest {
   }
 
   @Test
-  public void testClearByTag() {
+  public void testClearByTag1() {
     TestViewState<TestView> state = new TestViewState<>();
 
     state.singleByTag1();
@@ -89,6 +89,24 @@ public class ViewTest {
     assertEquals(0, view1.singleByTag11);
     assertEquals(0, view1.singleByTag12);
     assertEquals(0, view1.clearByTag1);
+  }
+
+  @Test
+  public void testSingleByMethod() {
+    TestViewState<TestView> state = new TestViewState<>();
+
+    state.singleByMethod();
+    state.singleByMethod();
+
+    TestViewImpl view1 = new TestViewImpl();
+    state.attach(view1);
+    assertEquals(1, view1.singleByMethod);
+
+    state.detach();
+    state.singleByMethod();
+    TestViewImpl view2 = new TestViewImpl();
+    state.attach(view2);
+    assertEquals(1, view2.singleByMethod);
   }
 
   @Test
@@ -115,6 +133,8 @@ public class ViewTest {
     public int clearByTag1 = 0;
 
     public int singleByTag20 = 0;
+
+    public int singleByMethod = 0;
 
     public int skip0 = 0;
     public int skip1 = 0;
@@ -148,6 +168,11 @@ public class ViewTest {
     @Override
     public void singleByTag2() {
       singleByTag20++;
+    }
+
+    @Override
+    public void singleByMethod() {
+      singleByMethod++;
     }
 
     @Override
